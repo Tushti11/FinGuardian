@@ -1,0 +1,219 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Outfit:wght@400;500;600;700;800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Outfit", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* Premium light palette from Geometric Balance spec */
+  --color-brand-dark: #0F172A;     /* Slate 900 */
+  --color-brand-medium: #475569;   /* Slate 600 */
+  --color-brand-light: #F8FAFC;    /* Slate 50 */
+  --color-brand-accent: #10B981;   /* Emerald */
+  --color-brand-accent-glow: rgba(16, 185, 129, 0.15);
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #F8FAFC; /* Clean Slate 50 */
+  color: #1E293B; /* High-contrast Slate 800 */
+  overflow-x: hidden;
+}
+
+/* Redefine .glass-panel to represent crisp clean solid card panels for "Geometric Balance" */
+.glass-panel {
+  background: #FFFFFF !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid #E2E8F0 !important; /* Slate 200 border line */
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.05) !important; /* Soft premium shadow */
+  color: #1E293B !important;
+  border-radius: 12px;
+}
+
+.glass-panel-hover {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-hover:hover {
+  background: #FFFFFF !important;
+  border-color: #CBD5E1 !important; /* Slate 300 */
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px 0 rgba(15, 23, 42, 0.08) !important;
+}
+
+/* Redefine inputs to clean slate light mode form controls */
+.glass-input {
+  background: #FFFFFF !important;
+  border: 1px solid #CBD5E1 !important; /* Slate 300 */
+  color: #0F172A !important; /* Slate 900 input text */
+  transition: all 0.2s;
+}
+
+.glass-input:focus {
+  border-color: #10B981 !important; /* Emerald focus path */
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15) !important;
+  outline: none;
+}
+
+/* Redefine inner text colors inside cards so that hardcoded text-white/slate-300 colors adapt seamlessly */
+.glass-panel h1, .glass-panel h2, .glass-panel h3, .glass-panel h4, .glass-panel h5, .glass-panel h6,
+.glass-panel .text-white, .glass-panel h1.text-white, .glass-panel h2.text-white, .glass-panel h3.text-white {
+  color: #0F172A !important; /* Slate 900 */
+}
+
+.glass-panel p, .glass-panel span,
+.glass-panel .text-slate-300, .glass-panel .text-slate-400, .glass-panel .text-slate-450, .glass-panel .text-slate-405, .glass-panel .text-slate-455 {
+  color: #57657A !important; /* Elegant slate grey reading flow */
+}
+
+/* Ensure all page titles, subheaders, and general texts outside h1-h5 classes have proper dark slate contrast on #F8FAFC background */
+main h1:not(#dash-banner h1, #dash-advisory-reminder h1, .glass-panel h1, button h1),
+main h2:not(#dash-banner h2, #dash-advisory-reminder h2, .glass-panel h2, button h2),
+main h3:not(#dash-banner h3, #dash-advisory-reminder h3, .glass-panel h3, button h3),
+main h4:not(#dash-banner h4, #dash-advisory-reminder h4, .glass-panel h4, button h4),
+main h5:not(#dash-banner h5, #dash-advisory-reminder h5, .glass-panel h5, button h5) {
+  color: #0F172A !important;
+}
+
+main p:not(#dash-banner p, #dash-advisory-reminder p, .glass-panel p, button p, [class*="bg-rose"] p, [class*="bg-red"] p),
+main span:not(#dash-banner span, #dash-advisory-reminder span, .glass-panel span, button span, [class*="bg-rose"] span, [class*="bg-red"] span, .font-mono, .text-brand-accent) {
+  color: #475569 !important;
+}
+
+/* Match general border separators inside main workspace to clean slate dividers */
+main .border-white\/5,
+main .border-white\/10 {
+  border-color: #E2E8F0 !important;
+}
+
+/* Convert all main buttons with dark-remnant classes into polished high-contrast white items */
+main button.bg-white\/5,
+main button.bg-white\/10 {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #E2E8F0 !important;
+  box-shadow: 0 1px 2px 0 rgba(15, 23, 42, 0.05) !important;
+}
+
+main button.bg-white\/5:hover,
+main button.bg-white\/10:hover {
+  background-color: #F8FAFC !important;
+  border-color: #CBD5E1 !important;
+}
+
+/* Correct inactive tab button hover states which previously went white-on-white */
+main .text-slate-400.hover\:text-white,
+main button.text-slate-400:hover {
+  color: #475569 !important;
+}
+
+main .text-slate-400.hover\:text-white:hover {
+  color: #0F172A !important;
+}
+
+/* Ensure aggregate dark background strips outside glass-panels adapt beautifully to light theme */
+main .bg-brand-dark\/40,
+main .bg-brand-dark\/35,
+main .bg-brand-dark\/30,
+main .bg-slate-900\/40,
+main .bg-slate-900\/55,
+main .bg-slate-850 {
+  background-color: #FFFFFF !important;
+  border-color: #E2E8F0 !important;
+  color: #1E293B !important;
+}
+
+/* Custom clean styling inside the chat interface to ensure ultra-high legibility */
+.glass-panel .bg-brand-accent\/10 {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  color: #065F46 !important; /* Rich deep emerald for excellent readability contrast */
+  border-color: rgba(16, 185, 129, 0.25) !important;
+}
+
+.glass-panel .bg-slate-900\/40 {
+  background-color: #F8FAFC !important;
+  color: #1E293B !important;
+  border-color: #E2E8F0 !important;
+}
+
+.glass-panel .bg-brand-accent\/10 p,
+.glass-panel .bg-brand-accent\/10 span {
+  color: #065F46 !important;
+}
+
+.glass-panel .bg-slate-900\/40 p,
+.glass-panel .bg-slate-900\/40 span {
+  color: #1E293B !important;
+}
+
+/* Keep user questions and inputs fully readable */
+.glass-panel input::placeholder {
+  color: #94A3B8 !important;
+}
+
+/* Overwrite dark backgrounds in cards to clean slate background tones */
+.glass-panel .bg-slate-800, .glass-panel .bg-[#060c12], .glass-panel .bg-[#0B192C], .glass-panel .bg-brand-dark/30, .glass-panel .bg-brand-dark/40, .glass-panel .bg-slate-900/40 {
+  background-color: #F8FAFC !important; /* Slate 50 */
+  color: #1E293B !important;
+  border: 1px solid #E2E8F0 !important;
+}
+
+.glass-panel .bg-[#112240] {
+  background-color: rgba(16, 185, 129, 0.1) !important;
+  color: #10B981 !important;
+  border: 1px solid rgba(16, 185, 129, 0.2) !important;
+}
+
+.glass-panel .text-brand-accent {
+  color: #059669 !important; /* Emerald 600 for better light-mode contrast */
+}
+
+.glass-panel select, .glass-panel input {
+  background-color: #F8FAFC !important;
+  border: 1px solid #CBD5E1 !important;
+  color: #0F172A !important;
+}
+
+.glass-panel select option {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+}
+
+/* Recharts layout tooltip style adaptation for light mode default look */
+.recharts-default-tooltip {
+  background-color: #FFFFFF !important;
+  border: 1px solid #E2E8F0 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+  color: #0F172A !important;
+}
+
+.recharts-tooltip-label {
+  color: #0F172A !important;
+  font-weight: 600 !important;
+}
+
+.recharts-tooltip-item {
+  color: #475569 !important;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F8FAFC;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #10B981;
+}

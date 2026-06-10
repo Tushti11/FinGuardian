@@ -1,0 +1,6 @@
+{
+  "name": "FinGuardian",
+  "description": "AI-powered Financial Legacy & Recovery Platform that helps users securely manage financial assets, liabilities, documents, nominees, and family emergency access rules.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
