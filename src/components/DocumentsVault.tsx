@@ -26,6 +26,8 @@ const CATEGORIES: DocumentCategory[] = [
 export default function DocumentsVault({ documents, onAddDocument, onDeleteDocument }: DocumentsVaultProps) {
   const [selectedCategory, setSelectedCategory] = useState<DocumentCategory | 'All'>('All');
   const [dragActive, setDragActive] = useState(false);
+  const [uploadCategory, setUploadCategory] =
+    useState<DocumentCategory>('Insurance Policies');
   const [selectedDocForPreview, setSelectedDocForPreview] = useState<Document | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -62,7 +64,7 @@ export default function DocumentsVault({ documents, onAddDocument, onDeleteDocum
   };
 
   const handleFileUpload = (file: File) => {
-    const fileCategory: DocumentCategory = selectedCategory !== 'All' ? selectedCategory : 'Insurance Policies';
+    const fileCategory: DocumentCategory = uploadCategory;
     const newId = `doc_${Date.now()}`;
 
     const newDoc: Document = {
@@ -72,6 +74,7 @@ export default function DocumentsVault({ documents, onAddDocument, onDeleteDocum
       uploadDate: new Date().toISOString().split('T')[0],
       fileSize: `${(file.size / (1024 * 1024)).toFixed(1)} MB`,
       ocrStatus: 'processing',
+      fileUrl: URL.createObjectURL(file),
     };
 
     onAddDocument(newDoc);
@@ -112,11 +115,10 @@ export default function DocumentsVault({ documents, onAddDocument, onDeleteDocum
       <div className="flex flex-wrap gap-2 pb-2">
         <button
           onClick={() => setSelectedCategory('All')}
-          className={`px-4 py-2 rounded-xl text-xs font-semibold tracking-wide border transition-all cursor-pointer ${
-            selectedCategory === 'All'
-              ? 'bg-brand-accent border-brand-accent text-brand-dark'
-              : 'bg-white/5 border-white/5 text-slate-300 hover:bg-white/10'
-          }`}
+          className={`px-4 py-2 rounded-xl text-xs font-semibold tracking-wide border transition-all cursor-pointer ${selectedCategory === 'All'
+            ? 'bg-brand-accent border-brand-accent text-brand-dark'
+            : 'bg-white/5 border-white/5 text-slate-300 hover:bg-white/10'
+            }`}
         >
           All Categories
         </button>
@@ -124,11 +126,10 @@ export default function DocumentsVault({ documents, onAddDocument, onDeleteDocum
           <button
             key={catString}
             onClick={() => setSelectedCategory(catString)}
-            className={`px-4 py-2 rounded-xl text-xs font-semibold tracking-wide border transition-all cursor-pointer ${
-              selectedCategory === catString
-                ? 'bg-brand-accent border-brand-accent text-brand-dark'
-                : 'bg-white/5 border-white/5 text-slate-300 hover:bg-white/10'
-            }`}
+            className={`px-4 py-2 rounded-xl text-xs font-semibold tracking-wide border transition-all cursor-pointer ${selectedCategory === catString
+              ? 'bg-brand-accent border-brand-accent text-white'
+              : 'bg-white/5 border-white/5 !text-white hover:bg-white/10'
+              }`}
           >
             {catString}
           </button>
@@ -143,11 +144,38 @@ export default function DocumentsVault({ documents, onAddDocument, onDeleteDocum
             onDragOver={handleDrag}
             onDragLeave={handleDrag}
             onDrop={handleDrop}
-            className={`cursor-pointer glass-panel py-12 px-6 rounded-3xl border-2 border-dashed flex flex-col items-center justify-center text-center transition-all min-h-[320px] ${
-              dragActive ? 'border-brand-accent bg-brand-accent/5' : 'border-white/10'
-            }`}
+            className={`cursor-pointer glass-panel py-12 px-6 rounded-3xl border-2 border-dashed flex flex-col items-center justify-center text-center transition-all min-h-[320px] ${dragActive ? 'border-brand-accent bg-brand-accent/5' : 'border-white/10'
+              }`}
             onClick={triggerFileSelect}
           >
+            <div className="w-full mb-5 space-y-2">
+              <p className="text-xs text-white font-semibold uppercase tracking-wider">
+                Select Document Type
+              </p>
+
+              <div className="grid grid-cols-2 gap-2">
+                {CATEGORIES.map((cat) => (
+                  <label
+                    key={cat}
+                    className={`cursor-pointer text-xs rounded-xl border px-3 py-2 transition-all ${uploadCategory === cat
+                      ? 'bg-brand-accent text-white border-brand-accent'
+                      : 'bg-white/5 text-slate-300 border-white/10'
+                      }`}
+                  >
+                    <input
+                      type="radio"
+                      name="docCategory"
+                      value={cat}
+                      checked={uploadCategory === cat}
+                      onChange={() => setUploadCategory(cat)}
+                      className="hidden"
+                    />
+
+                    {cat}
+                  </label>
+                ))}
+              </div>
+            </div>
             <input
               ref={fileInputRef}
               type="file"
@@ -229,9 +257,13 @@ export default function DocumentsVault({ documents, onAddDocument, onDeleteDocum
                     )}
 
                     <button
-                      onClick={() => setSelectedDocForPreview(doc)}
+                      onClick={() => {
+                        if (doc.fileUrl) {
+                          window.open(doc.fileUrl, "_blank");
+                        }
+                      }}
                       className="bg-white/5 hover:bg-white/10 p-2 rounded-xl text-slate-300"
-                      title="View Details"
+                      title="Open Document"
                     >
                       <Eye className="w-4 h-4" />
                     </button>

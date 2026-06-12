@@ -55,8 +55,23 @@ export default function EmergencyAccess({ logs, onAddLog }: EmergencyAccessProps
     onAddLog('SECURITY LOCKOUT: Active access claim dismissed by original trustee. Security seals restored.', 'success');
   };
 
+  const [showForm, setShowForm] = useState(false);
+
+  const [formData, setFormData] = useState({
+    claimantName: "",
+    relation: "",
+    nomineeName: "",
+    deathCertificate: null as File | null,
+  });
+
+  const [accessDenied, setAccessDenied] = useState("");
+
+
+
   return (
+
     <div id="emergency-root" className="space-y-8">
+
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h2 className="font-display font-bold text-2xl text-white">Emergency Access Center</h2>
@@ -64,7 +79,7 @@ export default function EmergencyAccess({ logs, onAddLog }: EmergencyAccessProps
         </div>
         {status.stage === 'idle' ? (
           <button
-            onClick={handleSimulateClaim}
+            onClick={() => setShowForm(true)}
             className="bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs px-4.5 py-3 rounded-xl flex items-center gap-1.5 transition-all cursor-pointer"
           >
             🏁 Simulate Emergency Claim
@@ -78,6 +93,7 @@ export default function EmergencyAccess({ logs, onAddLog }: EmergencyAccessProps
           </button>
         )}
       </div>
+
 
       {/* Security Alerts (Visible when claim is active) */}
       {status.stage !== 'idle' && (
@@ -132,13 +148,12 @@ export default function EmergencyAccess({ logs, onAddLog }: EmergencyAccessProps
               return (
                 <div key={step.id} className="space-y-3">
                   <div className="flex items-center md:flex-col md:text-center gap-3">
-                    <div className={`w-11 h-11 rounded-full flex items-center justify-center border transition-all ${
-                      isPassed
-                        ? 'bg-brand-accent border-brand-accent text-brand-dark shadow-md'
-                        : isActive
+                    <div className={`w-11 h-11 rounded-full flex items-center justify-center border transition-all ${isPassed
+                      ? 'bg-brand-accent border-brand-accent text-brand-dark shadow-md'
+                      : isActive
                         ? 'bg-amber-500/10 border-amber-550 text-amber-550 animate-pulse'
                         : 'bg-slate-900 border-white/10 text-slate-500'
-                    }`}>
+                      }`}>
                       <StepIcon className="w-5 h-5" />
                     </div>
                     <div>
@@ -183,13 +198,12 @@ export default function EmergencyAccess({ logs, onAddLog }: EmergencyAccessProps
                   </div>
                 </div>
 
-                <span className={`px-2 py-0.5 rounded text-[8px] font-mono shrink-0 ${
-                  log.status === 'success'
-                    ? 'bg-brand-accent/10 text-brand-accent border border-brand-accent/20'
-                    : log.status === 'alert'
+                <span className={`px-2 py-0.5 rounded text-[8px] font-mono shrink-0 ${log.status === 'success'
+                  ? 'bg-brand-accent/10 text-brand-accent border border-brand-accent/20'
+                  : log.status === 'alert'
                     ? 'bg-rose-500/10 text-rose-455 border border-rose-550/20'
                     : 'bg-blue-500/10 text-blue-400 border border-blue-550/20'
-                }`}>
+                  }`}>
                   {log.status.toUpperCase()}
                 </span>
               </div>
@@ -210,6 +224,88 @@ export default function EmergencyAccess({ logs, onAddLog }: EmergencyAccessProps
           </div>
         </div>
       </div>
+      {showForm && (
+        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
+
+          <div className="bg-[#0b0f14] p-6 rounded-2xl w-[420px] space-y-4 border border-white/10">
+
+            <h2 className="text-white font-bold text-lg">
+              Emergency Access Verification
+            </h2>
+
+            <input
+              className="w-full p-2 rounded bg-black/40 text-white border border-white/10"
+              placeholder="Claimant Name"
+              onChange={(e) =>
+                setFormData({ ...formData, claimantName: e.target.value })
+              }
+            />
+
+            <input
+              className="w-full p-2 rounded bg-black/40 text-white border border-white/10"
+              placeholder="Relation"
+              onChange={(e) =>
+                setFormData({ ...formData, relation: e.target.value })
+              }
+            />
+
+            <input
+              className="w-full p-2 rounded bg-black/40 text-white border border-white/10"
+              placeholder="Nominee Name"
+              onChange={(e) =>
+                setFormData({ ...formData, nomineeName: e.target.value })
+              }
+            />
+
+            <input
+              type="file"
+              className="w-full text-white"
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  deathCertificate: e.target.files?.[0] || null,
+                })
+              }
+            />
+
+            {accessDenied && (
+              <p className="text-red-400 text-xs">{accessDenied}</p>
+            )}
+
+            <div className="flex gap-2">
+              <button
+                className="bg-emerald-500 text-black px-4 py-2 rounded"
+                onClick={() => {
+                  const realNominee = "Savitri Devi"; // replace with your real data later
+
+                  if (formData.nomineeName === realNominee) {
+                    setStatus((prev) => ({
+                      ...prev,
+                      stage: "cooldown",
+                      cooldownDaysRemaining: 30,
+                      initiatedBy: formData.claimantName,
+                    }));
+
+                    setShowForm(false);
+                    setAccessDenied("");
+                  } else {
+                    setAccessDenied("❌ You are not the nominee");
+                  }
+                }}
+              >
+                Submit
+              </button>
+
+              <button
+                className="bg-red-500 text-white px-4 py-2 rounded"
+                onClick={() => setShowForm(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

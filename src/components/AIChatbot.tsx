@@ -87,6 +87,7 @@ export default function AIChatbot({ assets, liabilities, nominees, documents }: 
   };
 
   return (
+
     <div id="chatbot-container" className="grid grid-cols-1 lg:grid-cols-4 gap-8 min-h-[580px]">
       {/* Left Chat Window (Takes 3 Cols) */}
       <div className="lg:col-span-3 flex flex-col glass-panel rounded-3xl overflow-hidden border-white/[0.05] h-[640px]">
@@ -97,12 +98,14 @@ export default function AIChatbot({ assets, liabilities, nominees, documents }: 
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
+
               <h4 className="text-white font-bold text-sm">FinGuardian Intelligence Conduit</h4>
               <span className="text-[10px] text-brand-accent font-mono">SECURE AGENT • ACTIVE DIRECTORY</span>
             </div>
           </div>
           <span className="text-slate-550 text-xs font-mono">Model: gemini-3.5-flash</span>
         </div>
+
 
         {/* Message Panel Area */}
         <div className="flex-1 overflow-y-auto p-6 space-y-4">
@@ -111,17 +114,15 @@ export default function AIChatbot({ assets, liabilities, nominees, documents }: 
               key={msg.id}
               className={`flex gap-3.5 max-w-[85%] ${msg.sender === 'user' ? 'ml-auto flex-row-reverse' : ''}`}
             >
-              <div className={`p-2 rounded-xl self-start shrink-0 ${
-                msg.sender === 'user' ? 'bg-brand-accent text-brand-dark' : 'bg-[#112240] text-brand-accent'
-              }`}>
+              <div className={`p-2 rounded-xl self-start shrink-0 ${msg.sender === 'user' ? 'bg-brand-accent text-brand-dark' : 'bg-[#112240] text-brand-accent'
+                }`}>
                 {msg.sender === 'user' ? <User className="w-4 h-4" /> : <Shield className="w-4 h-4" />}
               </div>
 
-              <div className={`p-4 rounded-3xl leading-relaxed text-sm ${
-                msg.sender === 'user'
-                  ? 'bg-brand-accent/10 border border-brand-accent/20 text-white rounded-tr-none'
-                  : 'bg-slate-900/40 border border-white/5 text-slate-200 rounded-tl-none whitespace-pre-line'
-              }`}>
+              <div className={`p-4 rounded-3xl leading-relaxed text-sm ${msg.sender === 'user'
+                ? 'bg-brand-accent/10 border border-brand-accent/20 text-white rounded-tr-none'
+                : 'bg-slate-900/40 border border-white/5 text-slate-200 rounded-tl-none whitespace-pre-line'
+                }`}>
                 {/* Format markdown bold tags on simple fallback text */}
                 {msg.text.split('\n').map((para, i) => {
                   // Replace Markdown headers like ###
@@ -134,6 +135,7 @@ export default function AIChatbot({ assets, liabilities, nominees, documents }: 
                 <span className="text-[9px] font-mono text-slate-500 block text-right mt-1.5">{msg.timestamp}</span>
               </div>
             </div>
+
           ))}
 
           {/* AI Loader */}

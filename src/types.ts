@@ -37,6 +37,7 @@ export interface Nominee {
   relationship: string; // "Mother", "Brother", "Partner", "Spouse", etc.
   email: string;
   accessPermission: boolean; // "Permission Controls"
+  assignedAssetIds: string[];
 }
 
 export type DocumentCategory =
@@ -56,7 +57,9 @@ export interface Document {
   fileSize: string;
   ocrStatus: 'completed' | 'processing' | 'failed';
   summary?: string;
+  fileUrl?: string;
 }
+
 
 export interface ChatMessage {
   id: string;

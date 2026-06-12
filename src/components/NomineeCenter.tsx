@@ -15,14 +15,24 @@ interface NomineeCenterProps {
 }
 
 export default function NomineeCenter({ nominees, assets, onTogglePermission, onAddNominee }: NomineeCenterProps) {
+  const user = JSON.parse(
+    localStorage.getItem("finguardianUser") || "{}"
+  );
   const [showAddModal, setShowAddModal] = useState(false);
   const [name, setName] = useState('');
   const [relationship, setRelationship] = useState('Mother');
   const [email, setEmail] = useState('');
+  const [selectedAssets, setSelectedAssets] = useState<string[]>([]);
 
   // Calculate allocated assets list for a nominee name
   const getAllocatedAssetsForNominee = (nomineeName: string) => {
-    return assets.filter((a) => a.nomineeName === nomineeName);
+    const nominee = nominees.find((n) => n.name === nomineeName);
+
+    if (!nominee) return [];
+
+    return assets.filter((a) =>
+      nominee?.assignedAssetIds?.includes(a.id)
+    );
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -35,10 +45,12 @@ export default function NomineeCenter({ nominees, assets, onTogglePermission, on
       relationship,
       email,
       accessPermission: false,
+      assignedAssetIds: selectedAssets || [],
     });
 
     setName('');
     setEmail('');
+    setSelectedAssets([]);
     setShowAddModal(false);
   };
 
@@ -71,7 +83,7 @@ export default function NomineeCenter({ nominees, assets, onTogglePermission, on
           {/* Centered Primary Node */}
           <div className="relative z-10 bg-[#0B192C] border-2 border-brand-accent p-4 rounded-ful rounded-2xl text-center shadow-lg shadow-brand-accent/10 min-w-[150px]">
             <span className="text-[10px] font-mono text-brand-accent block font-bold leading-none mb-1">PRINCIPAL TRUSTEE</span>
-            <span className="text-white font-bold text-sm">Aditya Sharma (You)</span>
+            <span className="text-white font-bold text-sm">{user.fullName || "User"} (You)</span>
           </div>
 
           {/* Connected SVG lines */}
@@ -85,23 +97,29 @@ export default function NomineeCenter({ nominees, assets, onTogglePermission, on
             </svg>
           </div>
 
-          {/* Node Positions */}
-          <div className="absolute left-[5%] top-[5%] bg-slate-900/90 border border-white/10 px-3 py-2 rounded-xl text-xs text-center min-w-[120px]">
-            <span className="text-[9px] font-mono text-slate-500 block">MOTHER</span>
-            <span className="text-white font-bold">Savitri Devi</span>
-          </div>
-          <div className="absolute right-[5%] top-[5%] bg-slate-900/90 border border-white/10 px-3 py-2 rounded-xl text-xs text-center min-w-[120px]">
-            <span className="text-[9px] font-mono text-slate-500 block">BROTHER</span>
-            <span className="text-white font-bold">Rohan Sharma</span>
-          </div>
-          <div className="absolute left-[5%] bottom-[5%] bg-slate-900/90 border border-white/10 px-3 py-2 rounded-xl text-xs text-center min-w-[120px]">
-            <span className="text-[9px] font-mono text-slate-500 block">PARTNER</span>
-            <span className="text-white font-bold">Aditi Verma</span>
-          </div>
-          <div className="absolute right-[5%] bottom-[5%] bg-slate-900/90 border border-white/10 px-3 py-2 rounded-xl text-xs text-center min-w-[120px]">
-            <span className="text-[9px] font-mono text-slate-500 block">FATHER</span>
-            <span className="text-white font-bold">Vikram Sharma</span>
-          </div>
+          {nominees.map((nom, index) => {
+            const positions = [
+              'left-[5%] top-[5%]',
+              'right-[5%] top-[5%]',
+              'left-[5%] bottom-[5%]',
+              'right-[5%] bottom-[5%]',
+            ];
+
+            return (
+              <div
+                key={nom.id}
+                className={`absolute ${positions[index % positions.length]} bg-slate-900/90 border border-white/10 px-3 py-2 rounded-xl text-xs text-center min-w-[120px]`}
+              >
+                <span className="text-[9px] font-mono text-slate-500 block">
+                  {nom.relationship.toUpperCase()}
+                </span>
+
+                <span className="text-white font-bold">
+                  {nom.name}
+                </span>
+              </div>
+            );
+          })}
         </div>
       </div>
 
@@ -221,6 +239,40 @@ export default function NomineeCenter({ nominees, assets, onTogglePermission, on
                   className="w-full glass-input p-3 rounded-xl text-xs"
                   required
                 />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-xs text-slate-400 font-mono uppercase font-semibold">
+                  Assign Assets
+                </label>
+
+                <div className="max-h-40 overflow-y-auto space-y-2 bg-[#060c12] border border-white/10 rounded-xl p-3">
+                  {assets.map((asset) => (
+                    <label
+                      key={asset.id}
+                      className="flex items-center gap-3 text-xs text-white cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedAssets.includes(asset.id)}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedAssets([...selectedAssets, asset.id]);
+                          } else {
+                            setSelectedAssets(
+                              selectedAssets.filter((id) => id !== asset.id)
+                            );
+                          }
+                        }}
+                        className="accent-green-500"
+                      />
+
+                      <span>
+                        {asset.name} — ₹{asset.value.toLocaleString('en-IN')}
+                      </span>
+                    </label>
+                  ))}
+                </div>
               </div>
 
               <div className="flex gap-3 pt-4">

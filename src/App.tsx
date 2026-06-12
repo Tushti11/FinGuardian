@@ -2,20 +2,19 @@
  * @license
  * SPDX-License-Identifier: Apache-2.0
  */
-
-import React, { useState } from 'react';
-import { 
-  ShieldCheck, 
-  LayoutDashboard, 
-  Landmark, 
-  ReceiptText, 
-  FileText, 
-  Sparkles, 
-  Users, 
-  Activity, 
-  TrendingUp, 
-  LogOut, 
-  Menu, 
+import React, { useState, useEffect } from 'react';
+import {
+  ShieldCheck,
+  LayoutDashboard,
+  Landmark,
+  ReceiptText,
+  FileText,
+  Sparkles,
+  Users,
+  Activity,
+  TrendingUp,
+  LogOut,
+  Menu,
   X,
   Lock,
   ChevronRight,
@@ -32,28 +31,57 @@ import NomineeCenter from './components/NomineeCenter';
 import EmergencyAccess from './components/EmergencyAccess';
 import FinancialInsights from './components/FinancialInsights';
 import AssetRebalancing from './components/AssetRebalancing';
+import Profile from './components/Profile';
 
-import { 
-  INITIAL_NOMINEES, 
-  INITIAL_ASSETS, 
-  INITIAL_LIABILITIES, 
-  INITIAL_DOCUMENTS, 
-  INITIAL_ACTION_LOGS 
+
+import {
+  INITIAL_NOMINEES,
+  INITIAL_ASSETS,
+  INITIAL_LIABILITIES,
+  INITIAL_DOCUMENTS,
+  INITIAL_ACTION_LOGS
 } from './data/mockData';
 import { Asset, Liability, Nominee, Document, EmergencyActionLog } from './types';
 
 export default function App() {
+  const user = JSON.parse(
+    localStorage.getItem("finguardianUser") || "{}"
+  );
   // Global States
-  const [currentPage, setCurrentPage] = useState<'landing' | 'auth' | 'app'>('landing');
+  const [currentPage, setCurrentPage] =
+    useState<'landing' | 'auth' | 'profile' | 'app'>('landing');
   const [activeTab, setActiveTab] = useState<string>('dashboard');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Core Ledgers
   const [assets, setAssets] = useState<Asset[]>(INITIAL_ASSETS);
   const [liabilities, setLiabilities] = useState<Liability[]>(INITIAL_LIABILITIES);
-  const [nominees, setNominees] = useState<Nominee[]>(INITIAL_NOMINEES);
-  const [documents, setDocuments] = useState<Document[]>(INITIAL_DOCUMENTS);
+  const [nominees, setNominees] = useState<Nominee[]>(() => {
+    const savedNominees = localStorage.getItem('nominees');
+
+    return savedNominees
+      ? JSON.parse(savedNominees).map((n: any) => ({
+        ...n,
+        assignedAssetIds: n.assignedAssetIds || [],
+      }))
+      : [];
+  });
+  const [documents, setDocuments] = useState<Document[]>(() => {
+    const savedDocs = localStorage.getItem('documents');
+    return savedDocs ? JSON.parse(savedDocs) : [];
+  });
   const [logs, setLogs] = useState<EmergencyActionLog[]>(INITIAL_ACTION_LOGS);
+
+  useEffect(() => {
+    localStorage.setItem('nominees', JSON.stringify(nominees));
+  }, [nominees]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      'documents',
+      JSON.stringify(documents)
+    );
+  }, [documents]);
 
   // Handlers for interactive mutations
   const handleAddAsset = (newAsset: Omit<Asset, 'id'>) => {
@@ -148,77 +176,81 @@ export default function App() {
     switch (activeTab) {
       case 'dashboard':
         return (
-          <Dashboard 
-            assets={assets} 
-            liabilities={liabilities} 
-            nominees={nominees} 
-            documents={documents} 
+          <Dashboard
+            assets={assets}
+            liabilities={liabilities}
+            nominees={nominees}
+            documents={documents}
             onNavigate={(tab) => setActiveTab(tab)}
           />
         );
       case 'rebalance':
         return (
-          <AssetRebalancing 
-            assets={assets} 
-            onRecalibrateAssets={handleRecalibrateAssets} 
+          <AssetRebalancing
+            assets={assets}
+            onRecalibrateAssets={handleRecalibrateAssets}
           />
         );
       case 'assets':
         return (
-          <AssetManagement 
-            assets={assets} 
-            nominees={nominees} 
-            onAddAsset={handleAddAsset} 
-            onDeleteAsset={handleDeleteAsset} 
+          <AssetManagement
+            assets={assets}
+            nominees={nominees}
+            onAddAsset={handleAddAsset}
+            onDeleteAsset={handleDeleteAsset}
           />
         );
       case 'liabilities':
         return (
-          <LiabilityManagement 
-            liabilities={liabilities} 
-            onAddLiability={handleAddLiability} 
-            onDeleteLiability={handleDeleteLiability} 
+          <LiabilityManagement
+            liabilities={liabilities}
+            onAddLiability={handleAddLiability}
+            onDeleteLiability={handleDeleteLiability}
           />
         );
       case 'documents':
         return (
-          <DocumentsVault 
-            documents={documents} 
-            onAddDocument={handleAddDocument} 
-            onDeleteDocument={handleDeleteDocument} 
+          <DocumentsVault
+            documents={documents}
+            onAddDocument={handleAddDocument}
+            onDeleteDocument={handleDeleteDocument}
           />
         );
       case 'assistant':
         return (
-          <AIChatbot 
-            assets={assets} 
-            liabilities={liabilities} 
-            nominees={nominees} 
-            documents={documents} 
+          <AIChatbot
+            assets={assets}
+            liabilities={liabilities}
+            nominees={nominees}
+            documents={documents}
           />
         );
       case 'nominees':
         return (
-          <NomineeCenter 
-            nominees={nominees} 
-            assets={assets} 
-            onTogglePermission={handleToggleNomineePermission} 
-            onAddNominee={handleAddNominee} 
+          <NomineeCenter
+            nominees={nominees}
+            assets={assets}
+            onTogglePermission={handleToggleNomineePermission}
+            onAddNominee={handleAddNominee}
           />
         );
       case 'emergency':
         return (
-          <EmergencyAccess 
-            logs={logs} 
-            onAddLog={handleAddLog} 
+          <EmergencyAccess
+            logs={logs}
+            onAddLog={handleAddLog}
           />
         );
       case 'insights':
         return (
-          <FinancialInsights 
-            assets={assets} 
-            liabilities={liabilities} 
+          <FinancialInsights
+            assets={assets}
+            liabilities={liabilities}
           />
+        );
+      case 'profile':
+        return (
+          <Profile onLogout={() => setCurrentPage('landing')} />
         );
       default:
         return <Dashboard assets={assets} liabilities={liabilities} nominees={nominees} documents={documents} onNavigate={setActiveTab} />;
@@ -231,7 +263,11 @@ export default function App() {
   }
 
   if (currentPage === 'auth') {
-    return <LoginSignup onLoginSuccess={() => setCurrentPage('app')} />;
+    return (
+      <LoginSignup
+        onLoginSuccess={() => setCurrentPage('profile')}
+      />
+    );
   }
 
   const NAV_ITEMS = [
@@ -244,14 +280,16 @@ export default function App() {
     { id: 'rebalance', label: 'Smart Rebalancer', icon: Scale, badge: 'NEW' },
     { id: 'assistant', label: 'AI Guardian', icon: Sparkles, badge: 'GENAI' },
     { id: 'emergency', label: 'Emergency Center', icon: Activity },
+    { id: 'profile', label: 'Profile', icon: Users },
   ];
 
   return (
-    <div className="flex h-screen bg-[#F8FAFC] text-slate-800 overflow-hidden">
+    <div className="flex min-h-screen w-full bg-[#050505] text-white overflow-hidden m-0 p-0">
+
       {/* Sidebar Rail (Desktop) */}
-      <aside className="hidden lg:flex flex-col w-64 bg-[#0F172A] text-white border-r border-slate-800 h-full shrink-0">
+      <aside className="hidden lg:flex flex-col w-64 bg-[#080808] text-white border-r border-[#1B1B1B] min-h-full shrink-0">
         {/* Sidebar Brand header */}
-        <div className="p-6 border-b border-slate-800 flex items-center gap-2">
+        <div className="p-6 border-b border-[#1B1B1B] flex items-center gap-2">
           <div className="bg-brand-accent p-2 rounded-xl text-brand-dark flex items-center justify-center">
             <ShieldCheck className="w-5 h-5 text-brand-dark" />
           </div>
@@ -270,11 +308,10 @@ export default function App() {
                   setActiveTab(item.id);
                   setMobileMenuOpen(false);
                 }}
-                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all font-sans text-xs font-semibold cursor-pointer ${
-                  isActive
-                    ? 'bg-white/10 text-brand-accent border border-white/10 shadow-sm'
-                    : 'text-slate-400 hover:text-white hover:bg-white/5 border border-transparent'
-                }`}
+                className={`w-full flex items-center justify-between px-4 py-3 rounded-xl transition-all font-sans text-xs font-semibold cursor-pointer ${isActive
+                  ? 'bg-[#111111] text-brand-accent border border-[#22C55E]/20 shadow-sm'
+                  : 'text-gray-400 hover:text-white hover:bg-[#111111] border border-transparent'
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <Icon className={`w-4.5 h-4.5 ${isActive ? 'text-brand-accent' : 'text-slate-500'}`} />
@@ -291,19 +328,24 @@ export default function App() {
         </nav>
 
         {/* Sidebar Footer Profiles */}
-        <div className="p-4 border-t border-slate-800 gap-4 flex flex-col">
-          <div className="flex items-center gap-3 bg-slate-800/40 p-2.5 rounded-xl border border-slate-800">
+        <div className="p-4 border-t border-[#1B1B1B] gap-4 flex flex-col">
+          <div className="flex items-center gap-3 bg-[#0D0D0D] p-2.5 rounded-xl border border-slate-800">
             <div className="bg-brand-accent/10 p-2 rounded-lg text-brand-accent text-[10px] font-mono font-bold">
               AS
             </div>
             <div className="min-w-0">
-              <span className="text-white text-xs font-bold block truncate">Aditya Sharma</span>
-              <span className="text-slate-400 text-[9px] block truncate font-mono">tushtigupta2006@gmail.com</span>
+              <h4 className="text-sm font-semibold text-white">
+                {user.fullName || "User"}
+              </h4>
+
+              <p className="text-xs text-slate-400">
+                {user.email || "user@gmail.com"}
+              </p>
             </div>
           </div>
           <button
             onClick={() => setCurrentPage('landing')}
-            className="w-full bg-slate-800/50 hover:bg-rose-600 hover:text-white border border-slate-850 text-slate-300 font-medium py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+            className="w-full bg-[#0D0D0D] hover:bg-rose-600 hover:text-white border border-slate-850 text-slate-300 font-medium py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
           >
             <LogOut className="w-3.5 h-3.5" /> Close Portal
           </button>
@@ -313,7 +355,7 @@ export default function App() {
       {/* Main Workspace Frame */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Mobile Navbar overlay */}
-        <header className="lg:hidden bg-[#0F172A] text-white border-b border-slate-800 px-6 py-4 flex justify-between items-center z-10 shrink-0">
+        <header className="lg:hidden bg-[#080808] text-white border-b border-slate-800 px-6 py-4 flex justify-between items-center z-10 shrink-0">
           <div className="flex items-center gap-2">
             <div className="bg-brand-accent p-1.5 rounded-lg text-brand-dark">
               <ShieldCheck className="w-4 h-4 text-brand-dark" />
@@ -333,14 +375,14 @@ export default function App() {
         </header>
 
         {/* Content Wrapper */}
-        <main className="flex-grow overflow-y-auto p-6 md:p-10 max-w-7xl w-full mx-auto pb-16">
+        <main className="flex-grow overflow-y-auto p-8 md:p-12 lg:p-14 bg-[radial-gradient(circle_at_top_left,rgba(34,197,94,0.08),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(34,197,94,0.05),transparent_35%)]">
           {renderTabContent()}
         </main>
       </div>
 
       {/* Mobile Drawer Navigation overlay */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 bg-[#060c16]/95 backdrop-blur-md pt-20 px-6 flex flex-col justify-between pb-8">
+        <div className="lg:hidden fixed inset-0 z-40 bg-[#050505]/95 backdrop-blur-md pt-20 px-6 flex flex-col justify-between pb-8">
           <div className="space-y-2">
             {NAV_ITEMS.map((item) => {
               const Icon = item.icon;
@@ -352,11 +394,10 @@ export default function App() {
                     setActiveTab(item.id);
                     setMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-5 py-3.5 rounded-xl transition-all font-sans text-sm font-semibold cursor-pointer ${
-                    isActive
-                      ? 'bg-brand-accent/10 border border-brand-accent/25 text-brand-accent'
-                      : 'text-slate-405 hover:bg-white/5 text-white'
-                  }`}
+                  className={`w-full flex items-center justify-between px-5 py-3.5 rounded-xl transition-all font-sans text-sm font-semibold cursor-pointer ${isActive
+                    ? 'bg-brand-accent/10 border border-brand-accent/25 text-brand-accent'
+                    : 'text-slate-405 hover:bg-white/5 text-white'
+                    }`}
                 >
                   <div className="flex items-center gap-3.5">
                     <Icon className={`w-5 h-5 ${isActive ? 'text-brand-accent' : 'text-slate-500'}`} />

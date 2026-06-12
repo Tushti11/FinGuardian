@@ -13,14 +13,28 @@ interface LandingPageProps {
 
 export default function LandingPage({ onGetStarted }: LandingPageProps) {
   return (
-    <div id="landing-container" className="min-h-screen flex flex-col bg-[#060c16]">
+    <div
+      id="landing-container"
+      className="min-h-screen flex flex-col bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: `
+      linear-gradient(
+        rgba(0,0,0,0.25)
+      ),
+      url('/fin.png')
+    `,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+      }}
+    >
       {/* Navbar overlay */}
-      <header id="landing-header" className="sticky top-0 z-50 glass-panel border-b border-white/[0.05] py-4 px-6 md:px-12 flex justify-between items-center">
+      <header id="landing-header" className="sticky top-0 z-50 glass-panel border-b border-green-500/10 backdrop-blur-xl py-4 px-6 md:px-12 flex justify-between items-center">
         <div id="landing-logo" className="flex items-center gap-2">
           <div className="bg-brand-accent p-2 rounded-lg flex items-center justify-center">
             <Shield className="w-5 h-5 text-brand-dark" />
           </div>
-          <span className="font-display font-bold text-xl tracking-wide bg-gradient-to-r from-white via-slate-100 to-brand-accent bg-clip-text text-transparent">FinGuardian</span>
+          <span className="font-display font-bold text-xl tracking-wide bg-gradient-to-r from-white via-green-100 to-green-400 bg-clip-text text-transparent">FinGuardian</span>
         </div>
         <nav id="landing-nav" className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
           <a href="#features" className="hover:text-brand-accent transition-colors">Features</a>
@@ -41,8 +55,8 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
       {/* Hero Section */}
       <section id="landing-hero" className="relative flex-1 flex flex-col items-center justify-center px-6 md:px-12 py-20 text-center overflow-hidden">
         {/* Glow Spheres */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-accent/10 rounded-full blur-3xl -z-10 animate-pulse" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-brand-medium/20 rounded-full blur-3xl -z-10" />
+        <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-green-500/20 rounded-full blur-[150px] -z-10 animate-pulse" />
+        <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] bg-green-500/10 rounded-full blur-[150px] -z-10" />
 
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -57,7 +71,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
 
           <h1 className="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl text-white tracking-tight leading-[1.1] mb-6">
             Protect Your <br className="hidden sm:inline" />
-            <span className="bg-gradient-to-r from-white via-slate-100 to-brand-accent bg-clip-text text-transparent">Financial Legacy</span>
+            <span className="bg-gradient-to-r from-white via-green-100 to-green-400 bg-clip-text text-transparent">Financial Legacy</span>
           </h1>
 
           <p className="text-slate-300 text-lg sm:text-xl max-w-2xl mx-auto mb-10 leading-relaxed font-sans">
@@ -68,14 +82,14 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
             <button
               id="landing-hero-cta-get"
               onClick={onGetStarted}
-              className="w-full sm:w-auto bg-brand-accent hover:bg-emerald-400 text-brand-dark text-base font-bold py-3.5 px-8 rounded-xl shadow-lg shadow-brand-accent/20 flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer"
+              className="w-full sm:w-auto bg-[#22C55E] hover:bg-[#4ADE80] text-brand-dark text-base font-bold py-3.5 px-8 rounded-xl shadow-lg shadow-brand-accent/20 flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer"
             >
               Get Started <ChevronRight className="w-5 h-5" />
             </button>
             <a
               id="landing-hero-cta-learn"
               href="#features"
-              className="w-full sm:w-auto bg-white/5 hover:bg-white/10 text-white text-base py-3.5 px-8 rounded-xl border border-white/10 flex items-center justify-center gap-2 transition-colors cursor-pointer"
+              className="w-full sm:w-auto bg-black/40 hover:border-green-500/20 text-white text-base py-3.5 px-8 rounded-xl border border-white/10 flex items-center justify-center gap-2 transition-colors cursor-pointer"
             >
               Learn More
             </a>
@@ -84,7 +98,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
       </section>
 
       {/* Stats Section with ₹2.2 Lakh Crore Unclaimed Assets */}
-      <section id="stats" className="py-16 bg-[#03080e] border-y border-white/[0.05] relative px-6">
+      <section id="stats" className="py-16 bg-[#050505] border-y border-white/[0.05] relative px-6">
         <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12">
           <div className="max-w-lg">
             <div className="flex items-center gap-2 text-rose-500 font-semibold text-sm uppercase tracking-wider mb-2 font-mono">
@@ -138,9 +152,9 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {/* Card 1 */}
-          <div className="glass-panel p-8 rounded-2xl relative group overflow-hidden transition-all duration-300 hover:border-brand-accent/30">
+          <div className="glass-panel p-8 rounded-2xl bg-black/60 backdrop-blur-xl border border-green-500/10 relative group overflow-hidden transition-all duration-300 hover:border-brand-accent/30">
             <div className="absolute -top-10 -right-10 w-24 h-24 bg-brand-accent/10 rounded-full blur-xl group-hover:scale-150 transition-all duration-500" />
-            <div className="bg-brand-accent/10 p-4 rounded-xl inline-flex mb-6 text-brand-accent">
+            <div className="bg-green-500/10 p-4 rounded-xl inline-flex mb-6 text-brand-accent">
               <PieChart className="w-6 h-6" />
             </div>
             <h3 className="font-display font-bold text-xl text-white mb-3">Portfolio Cohesion</h3>
@@ -150,9 +164,9 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
           </div>
 
           {/* Card 2 */}
-          <div className="glass-panel p-8 rounded-2xl relative group overflow-hidden transition-all duration-300 hover:border-brand-accent/30">
+          <div className="glass-panel p-8 rounded-2xl bg-black/60 backdrop-blur-xl border border-green-500/10 relative group overflow-hidden transition-all duration-300 hover:border-brand-accent/30">
             <div className="absolute -top-10 -right-10 w-24 h-24 bg-brand-accent/10 rounded-full blur-xl group-hover:scale-150 transition-all duration-500" />
-            <div className="bg-brand-accent/10 p-4 rounded-xl inline-flex mb-6 text-brand-accent">
+            <div className="bg-green-500/10 p-4 rounded-xl inline-flex mb-6 text-brand-accent">
               <Users className="w-6 h-6" />
             </div>
             <h3 className="font-display font-bold text-xl text-white mb-3">Nominee Assignee Center</h3>
@@ -162,9 +176,9 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
           </div>
 
           {/* Card 3 */}
-          <div className="glass-panel p-8 rounded-2xl relative group overflow-hidden transition-all duration-300 hover:border-brand-accent/30">
+          <div className="glass-panel p-8 rounded-2xl bg-black/60 backdrop-blur-xl border border-green-500/10 relative group overflow-hidden transition-all duration-300 hover:border-brand-accent/30">
             <div className="absolute -top-10 -right-10 w-24 h-24 bg-brand-accent/10 rounded-full blur-xl group-hover:scale-150 transition-all duration-500" />
-            <div className="bg-brand-accent/10 p-4 rounded-xl inline-flex mb-6 text-brand-accent">
+            <div className="bg-green-500/10 p-4 rounded-xl inline-flex mb-6 text-brand-accent">
               <FileLock className="w-6 h-6" />
             </div>
             <h3 className="font-display font-bold text-xl text-white mb-3">Secure Document Vault</h3>
@@ -174,9 +188,9 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
           </div>
 
           {/* Card 4 */}
-          <div className="glass-panel p-8 rounded-2xl relative group overflow-hidden transition-all duration-300 hover:border-brand-accent/30">
+          <div className="glass-panel p-8 rounded-2xl bg-black/60 backdrop-blur-xl border border-green-500/10 relative group overflow-hidden transition-all duration-300 hover:border-brand-accent/30">
             <div className="absolute -top-10 -right-10 w-24 h-24 bg-brand-accent/10 rounded-full blur-xl group-hover:scale-150 transition-all duration-500" />
-            <div className="bg-brand-accent/10 p-4 rounded-xl inline-flex mb-6 text-brand-accent">
+            <div className="bg-green-500/10 p-4 rounded-xl inline-flex mb-6 text-brand-accent">
               <Activity className="w-6 h-6" />
             </div>
             <h3 className="font-display font-bold text-xl text-white mb-3">Dead Man\'s Switch</h3>
@@ -186,9 +200,9 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
           </div>
 
           {/* Card 5 */}
-          <div className="glass-panel p-8 rounded-2xl relative group overflow-hidden transition-all duration-300 hover:border-brand-accent/30">
+          <div className="glass-panel p-8 rounded-2xl bg-black/60 backdrop-blur-xl border border-green-500/10 relative group overflow-hidden transition-all duration-300 hover:border-brand-accent/30">
             <div className="absolute -top-10 -right-10 w-24 h-24 bg-brand-accent/10 rounded-full blur-xl group-hover:scale-150 transition-all duration-500" />
-            <div className="bg-brand-accent/10 p-4 rounded-xl inline-flex mb-6 text-brand-accent">
+            <div className="bg-green-500/10 p-4 rounded-xl inline-flex mb-6 text-brand-accent">
               <Key className="w-6 h-6" />
             </div>
             <h3 className="font-display font-bold text-xl text-white mb-3">30-Day Cooldown</h3>
@@ -198,9 +212,9 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
           </div>
 
           {/* Card 6 */}
-          <div className="glass-panel p-8 rounded-2xl relative group overflow-hidden transition-all duration-300 hover:border-brand-accent/30">
+          <div className="glass-panel p-8 rounded-2xl bg-black/60 backdrop-blur-xl border border-green-500/10 relative group overflow-hidden transition-all duration-300 hover:border-brand-accent/30">
             <div className="absolute -top-10 -right-10 w-24 h-24 bg-brand-accent/10 rounded-full blur-xl group-hover:scale-150 transition-all duration-500" />
-            <div className="bg-brand-accent/10 p-4 rounded-xl inline-flex mb-6 text-brand-accent">
+            <div className="bg-green-500/10 p-4 rounded-xl inline-flex mb-6 text-brand-accent">
               <Shield className="w-6 h-6" />
             </div>
             <h3 className="font-display font-bold text-xl text-white mb-3">AI Financial Insights</h3>
@@ -212,7 +226,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
       </section>
 
       {/* Security Section */}
-      <section id="security" className="py-20 bg-[#040911] border-t border-white/[0.05]">
+      <section id="security" className="py-20 bg-[#050505] border-t border-white/[0.05]">
         <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
             <span className="text-brand-accent text-sm font-semibold tracking-wider uppercase font-mono block mb-2">Zero-Trust Security</span>
@@ -285,7 +299,7 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
       </section>
 
       {/* Footer */}
-      <footer id="landing-footer" className="mt-auto border-t border-white/[0.05] py-12 px-6 md:px-12 bg-[#03060c] text-sm text-slate-400">
+      <footer id="landing-footer" className="mt-auto border-t border-white/[0.05] py-12 px-6 md:px-12 bg-black text-sm text-slate-400">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2">
             <div className="bg-brand-accent p-1.5 rounded text-brand-dark">
