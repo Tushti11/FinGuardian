@@ -54,12 +54,18 @@ export default function Dashboard({ assets, liabilities, nominees, documents, on
     return Math.min(score, 100);
   }, [documents, nominees, assets]);
 
+  const savedUser = JSON.parse(
+    localStorage.getItem("finguardianUser") || "{}"
+  );
+
+  const loggedInUserName = savedUser.fullName || "User";
+
   return (
     <div id="dashboard-root" className="space-y-8">
       {/* Welcome Banner */}
       <div id="dash-banner" className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 bg-gradient-to-r from-brand-dark/80 to-[#10B981]/10 p-6 md:p-8 rounded-3xl border border-[#10B981]/20">
         <div>
-          <h2 className="font-display font-extrabold text-2xl md:text-3xl text-white tracking-tight">Welcome Back, Aditya</h2>
+          <h2 className="font-display font-extrabold text-2xl md:text-3xl text-white tracking-tight">Welcome Back, {loggedInUserName}</h2>
           <p className="text-slate-300 text-sm mt-1">Your estate shield is actively synchronized. No emergency events logged today.</p>
         </div>
         <div className="flex items-center gap-3 bg-[#060c12]/80 border border-white/10 px-4 py-2.5 rounded-xl text-xs font-mono">
@@ -185,7 +191,7 @@ export default function Dashboard({ assets, liabilities, nominees, documents, on
               <div className="bg-gradient-to-r from-teal-400 to-brand-accent h-full" style={{ width: `${securityScore}%` }} />
             </div>
           </div>
-          <div 
+          <div
             onClick={() => onNavigate('insights')}
             className="ml-6 flex items-center gap-1 text-slate-400 hover:text-brand-accent font-semibold text-xs cursor-pointer select-none font-mono"
           >

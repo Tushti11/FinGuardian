@@ -46,8 +46,8 @@ export default function AssetManagement({ assets, nominees, onAddAsset, onDelete
   };
 
   // Categories based on active Tab
-  const categories = activeTab === 'liquid' 
-    ? ['Bank Account', 'Mutual Funds', 'Stocks', 'Fixed Deposits', 'Crypto'] 
+  const categories = activeTab === 'liquid'
+    ? ['Bank Account', 'Mutual Funds', 'Stocks', 'Fixed Deposits', 'Crypto']
     : ['Property', 'Land', 'Gold', 'Vehicles', 'Businesses', 'Bank Locker'];
 
   // Handle Tab switch
@@ -76,22 +76,20 @@ export default function AssetManagement({ assets, nominees, onAddAsset, onDelete
       <div className="flex border-b border-white/10">
         <button
           onClick={() => handleTabChange('liquid')}
-          className={`pb-3.5 px-6 font-display font-semibold text-sm relative transition-colors cursor-pointer ${
-            activeTab === 'liquid' ? 'text-brand-accent' : 'text-slate-400 hover:text-white'
-          }`}
+          className={`pb-3.5 px-6 font-display font-semibold text-sm relative transition-colors cursor-pointer ${activeTab === 'liquid' ? 'text-brand-accent' : 'text-slate-400 hover:text-white'
+            }`}
         >
-          ⚡ Liquid Assets
+          Liquid Assets
           {activeTab === 'liquid' && (
-            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-accent" />
+            <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-accent text-white" />
           )}
         </button>
         <button
           onClick={() => handleTabChange('non-liquid')}
-          className={`pb-3.5 px-6 font-display font-semibold text-sm relative transition-colors cursor-pointer ${
-            activeTab === 'non-liquid' ? 'text-brand-accent' : 'text-slate-400 hover:text-white'
-          }`}
+          className={`pb-3.5 px-6 font-display font-semibold text-sm relative transition-colors cursor-pointer ${activeTab === 'non-liquid' ? 'text-brand-accent' : 'text-slate-400 hover:text-white'
+            }`}
         >
-          🏔️ Non-Liquid Assets
+          Non-Liquid Assets
           {activeTab === 'non-liquid' && (
             <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-brand-accent" />
           )}
